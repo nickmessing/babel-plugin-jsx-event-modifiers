@@ -1,9 +1,9 @@
 {
-  "name": "babel-plugin-jsx-syntactic-sugar",
-  "version": "1.0.1",
-  "description": "JSX Syntactic Sugar Plugin",
+  "name": "babel-plugin-jsx-event-modifiers",
+  "version": "1.0.2",
+  "description": "JSX Syntactic Sugar Plugin for Event Modifiers",
   "main": "index.js",
-  "repository": "https://github.com/nickmessing/babel-plugin-jsx-syntactic-sugar.git",
+  "repository": "https://github.com/nickmessing/babel-plugin-jsx-event-modifiers.git",
   "author": "Nicolai Moraru <dot.nick.dot.messing@gmail.com>",
   "license": "MIT",
   "devDependencies": {

@@ -1,24 +1,24 @@
-## JSX Syntactic Sugar
+## Event Modifiers for JSX
 
 This babel plugin adds some syntactic sugar to JSX.
 
 ### Usage:
 
 ```bash
-npm i babel-plugin-jsx-syntactic-sugar -D
+npm i babel-plugin-jsx-event-modifiers -D
 ```
 or
 ```bash
-yarn add babel-plugin-jsx-syntactic-sugar -D
+yarn add babel-plugin-jsx-event-modifiers -D
 ```
 
-Then add `jsx-syntactic-sugar` to your `.babelrc` file under `plugins`
+Then add `jsx-event-modifiers` to your `.babelrc` file under `plugins`
 
 example .babelrc (for vue):
 ```json
 {
   "presets": ["es2015"],
-  "plugins": ["jsx-syntactic-sugar", "transform-vue-jsx"]
+  "plugins": ["jsx-event-modifiers", "transform-vue-jsx"]
 }
 ```
 example .babelrc (for react):
@@ -28,7 +28,7 @@ example .babelrc (for react):
     "es2015",
     "react"
   ],
-  "plugins": ["jsx-syntactic-sugar"]
+  "plugins": ["jsx-event-modifiers"]
 }
 ```
 
@@ -40,8 +40,8 @@ export default {
   render () {
     return (
       <input
-        onKeypress:up={this.methodForPressingUp}
-        onKeypress:down={this.methodForPressingDown}
+        onKeyUp:up={this.methodForPressingUp}
+        onKeyUp:down={this.methodForPressingDown}
       />
     )
   }
@@ -53,7 +53,7 @@ export default {
   render () {
     return (
       <input
-        onKeypress={event => {
+        onKeyUp={event => {
           if (event.charCode === 38)
             this.methodForPressingUp(event);
 
@@ -154,7 +154,7 @@ Example:
 ```js
 export default {
   render () {
-    return <input onKeypress:k13={this.method} />
+    return <input onKeyUp:k13={this.method} />
   }
 }
 ```
@@ -163,7 +163,7 @@ is transpiled to:
 export default {
   render () {
     return (
-      <input onKeypress={event => {
+      <input onKeyUp={event => {
         if (event.charCode === 13)
           this.method(event);
       }} />
@@ -193,7 +193,7 @@ Example:
 ```js
 export default {
   render () {
-    return <input onKeypress:enter={this.method} />
+    return <input onKeyUp:enter={this.method} />
   }
 }
 ```
@@ -202,7 +202,7 @@ is transpiled to:
 export default {
   render () {
     return (
-      <input onKeypress={event => {
+      <input onKeyUp={event => {
         if (event.charCode === 13)
           this.method(event);
       }} />
@@ -218,8 +218,8 @@ Example:
 export default {
   render () {
     return <input
-      onKeypress:enter={this.method}
-      onKeypress:k60={this.otherMethod} />
+      onKeyUp:enter={this.method}
+      onKeyUp:k60={this.otherMethod} />
   }
 }
 ```
@@ -229,7 +229,7 @@ export default {
   render () {
     return (
       <input
-        onKeypress={event => {
+        onKeyUp={event => {
           if (event.charCode === 13)
             this.method(event);
 

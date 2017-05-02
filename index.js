@@ -42,7 +42,7 @@ module.exports = babel => {
         '===',
         t.memberExpression(
           t.identifier('event'),
-          t.identifier('charCode')
+          t.identifier('keyCode')
         ),
         t.numericLiteral(key)
       )
