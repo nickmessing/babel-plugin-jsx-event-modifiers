@@ -109,7 +109,7 @@ module.exports = babel => {
             const attributes = []
             const events = {}
             path.node.attributes.forEach(attribute => {
-              if (attribute.name.type !== 'JSXNamespacedName' || attribute.name.namespace.name.indexOf('on') !== 0) {
+              if (t.isJSXSpreadAttribute(attribute) || attribute.name.type !== 'JSXNamespacedName' || attribute.name.namespace.name.indexOf('on') !== 0) {
                 return attributes.push(attribute)
               }
               transformAttribute(attribute, events)

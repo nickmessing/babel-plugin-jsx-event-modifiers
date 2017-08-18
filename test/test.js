@@ -7,6 +7,19 @@ const transpile = src => {
   }).code.trim()
 }
 
+test('ignore spread', t => {
+  t.is(
+    transpile(`<input {...a} onKeyUp:prevent={this.method} />`),
+    `var _this = this;
+
+<input {...a} onKeyUp={event => {
+  event.preventDefault();
+
+  _this.method(event);
+}} />;`
+  )
+})
+
 test(':{ keyCode } modifier', t => {
   t.is(
     transpile(`<input onKeyUp:k13={this.method} />`),
