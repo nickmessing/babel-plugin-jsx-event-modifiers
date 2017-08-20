@@ -14,21 +14,11 @@ yarn add babel-plugin-jsx-event-modifiers -D
 
 Then add `jsx-event-modifiers` to your `.babelrc` file under `plugins`
 
-example .babelrc (for vue):
+example .babelrc:
 ```json
 {
   "presets": ["es2015"],
   "plugins": ["jsx-event-modifiers", "transform-vue-jsx"]
-}
-```
-example .babelrc (for react):
-```json
-{
-  "presets": [
-    "es2015",
-    "react"
-  ],
-  "plugins": ["jsx-event-modifiers"]
 }
 ```
 
