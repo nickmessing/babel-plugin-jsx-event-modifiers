@@ -29,11 +29,9 @@
     "pretest": "NODE_ENV=test npm run build",
     "test": "nyc --reporter=html --reporter=text ava",
     "build": "rollup --config build.js",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "nyc": {
-    "include": [
-      "src"
-    ]
+    "include": ["src"]
   }
 }
