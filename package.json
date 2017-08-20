@@ -6,6 +6,9 @@
   "repository": "https://github.com/nickmessing/babel-plugin-jsx-event-modifiers.git",
   "author": "Nicolai Moraru <dot.nick.dot.messing@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "ava": "^0.22.0",
     "babel-core": "^6.26.0",
