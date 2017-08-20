@@ -89,7 +89,7 @@ var generateBindingBody = (function (t, _ref) {
       }).map(function (keyModifier) {
         return t.memberExpression(t.identifier('$event'), t.identifier(`${keyModifier}Key`));
       }).reduce(function (leftCondition, rightCondition) {
-        return t.logicalExpression('&&', leftCondition, rightCondition);
+        return t.logicalExpression('||', leftCondition, rightCondition);
       }));
     } else if (aliases[modifier]) {
       keyConditions.push(t.callExpression(t.memberExpression(t.thisExpression(), t.identifier('_k')), [t.memberExpression(t.identifier('$event'), t.identifier('keyCode')), t.stringLiteral(modifier), Array.isArray(aliases[modifier]) ? t.arrayExpression(aliases[modifier].map(function (el) {
