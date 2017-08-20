@@ -1822,7 +1822,7 @@ var generateBindingBody = (function (t, _ref) {
                       }).reduce(function (leftCondition, rightCondition) {
                         cov_28cz23z0dk.f[4]++;
                         cov_28cz23z0dk.s[17]++;
-                        return t.logicalExpression('&&', leftCondition, rightCondition);
+                        return t.logicalExpression('||', leftCondition, rightCondition);
                       }));
                     } else {
                         cov_28cz23z0dk.b[4][1]++;

@@ -38,7 +38,7 @@ export default (t, { modifiers, expression }) => {
         keyModifiers
           .filter(keyModifier => !modifiers.has(keyModifier))
           .map(keyModifier => t.memberExpression(t.identifier('$event'), t.identifier(`${keyModifier}Key`)))
-          .reduce((leftCondition, rightCondition) => t.logicalExpression('&&', leftCondition, rightCondition)),
+          .reduce((leftCondition, rightCondition) => t.logicalExpression('||', leftCondition, rightCondition)),
       )
     } else if (aliases[modifier]) {
       keyConditions.push(
