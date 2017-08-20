@@ -9,7 +9,8 @@ const transpile = src => {
 
 const snapshotTest = (name, code) =>
   test(name, t => {
-    t.snapshot(transpile(code), name)
+    t.snapshot(code, `${name} - before`)
+    t.snapshot(transpile(code), `${name} - compiled`)
   })
 
 snapshotTest('No Events', '<a />')
