@@ -3,187 +3,34 @@ import { transform } from 'babel-core'
 
 const transpile = src => {
   return transform(src, {
-    plugins: './index'
+    plugins: './dist/bundle-test',
   }).code.trim()
 }
 
-test('ignore spread', t => {
-  t.is(
-    transpile(`<input {...a} onKeyUp:prevent={this.method} />`),
-    `var _this = this;
+const snapshotTest = (name, code) =>
+  test(name, t => {
+    t.snapshot(transpile(code), name)
+  })
 
-<input {...a} onKeyUp={event => {
-  event.preventDefault();
-
-  _this.method(event);
-}} />;`
-  )
-})
-
-test(':{ keyCode } modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:k13={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 13) _this.method(event);
-}} />;`
-  )
-})
-
-test(':prevent modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:prevent={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  event.preventDefault();
-
-  _this.method(event);
-}} />;`
-  )
-})
-
-test(':prevent modifier with no body', t => {
-  t.is(
-    transpile(`<input onKeyUp:prevent />`),
-    `<input onKeyUp={event => {
-  event.preventDefault();
-}} />;`
-  )
-})
-
-test(':stop modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:stop={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  event.stopPropagation();
-
-  _this.method(event);
-}} />;`
-  )
-})
-
-test(':unknown modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:randomid={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  _this.method(event);
-}} />;`
-  )
-})
-
-test(':esc modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:esc={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 27) _this.method(event);
-}} />;`
-  )
-})
-
-test(':tab modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:tab={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 9) _this.method(event);
-}} />;`
-  )
-})
-
-test(':enter modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:enter={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 13) _this.method(event);
-}} />;`
-  )
-})
-
-test(':space modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:space={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 32) _this.method(event);
-}} />;`
-  )
-})
-
-test(':up modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:up={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 38) _this.method(event);
-}} />;`
-  )
-})
-
-test(':left modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:left={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 37) _this.method(event);
-}} />;`
-  )
-})
-
-test(':right modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:right={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 39) _this.method(event);
-}} />;`
-  )
-})
-
-test(':down modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:down={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 40) _this.method(event);
-}} />;`
-  )
-})
-
-test(':delete modifier', t => {
-  t.is(
-    transpile(`<input onKeyUp:delete={this.method} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 8 || event.keyCode === 46) _this.method(event);
-}} />;`
-  )
-})
-
-test('combine :up and :down modifiers', t => {
-  t.is(
-    transpile(`<input onKeyUp:up={this.methodUp} onKeyUp:down={this.methodDown} />`),
-    `var _this = this;
-
-<input onKeyUp={event => {
-  if (event.keyCode === 38) _this.methodUp(event);
-  if (event.keyCode === 40) _this.methodDown(event);
-}} />;`
-  )
-})
+snapshotTest('No Events', '<a />')
+snapshotTest('Ignores spread', '<a {...b} />')
+snapshotTest('Ignores attributes', '<a href="#" />')
+snapshotTest('Ignores not jsx expressions', '<a onEvent="str" />')
+snapshotTest('Plain Event', '<a onEvent={this.action} />')
+snapshotTest('Supports Dash', '<a on-event={this.action} />')
+snapshotTest('Combine Events', '<a onEvent={this.action1} onEvent={this.action2} />')
+snapshotTest('Simple :capture', '<a onEvent:capture={this.action1} />')
+snapshotTest('Simple :once', '<a onEvent:once={this.action1} />')
+snapshotTest(':capture-once', '<a onEvent:capture-once={this.action1} />')
+snapshotTest('Simple stopPropagation :stop', '<a onEvent:stop={this.action1} />')
+snapshotTest('Simple preventDefault :prevent', '<a onEvent:prevent={this.action1} />')
+snapshotTest('Simple :self', '<a onEvent:self={this.action1} />')
+snapshotTest('Simple no-key-modifier :bare', '<a onEvent:bare={this.action1} />')
+snapshotTest('Simple key-modifier :shift', '<a onEvent:shift={this.action1} />')
+snapshotTest(
+  'No key modifier but alt and shift and must be both alt and shift :bare-alt-shift',
+  '<a onEvent:bare-alt-shift={this.action1} />',
+)
+snapshotTest('Simple alias :enter', '<a onEvent:enter={this.action1} />')
+snapshotTest('Simple double alias :delete', '<a onEvent:delete={this.action1} />')
+snapshotTest('Simple key code :k120', '<a onEvent:k120={this.action1} />')

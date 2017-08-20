@@ -40,8 +40,10 @@ export default {
   render () {
     return (
       <input
-        onKeyUp:up={this.methodForPressingUp}
-        onKeyUp:down={this.methodForPressingDown}
+        onKeyup:up={this.methodForPressingUp}
+        onKeyup:down={this.methodForPressingDown}
+        onKeyup:bare-shift-enter={this.methodOnlyOnShiftEnter}
+        onKeyup:bare-alt-enter={this.methodOnlyOnAltEnter}
       />
     )
   }
@@ -50,193 +52,80 @@ export default {
 will be transpiled into:
 ```js
 export default {
-  render () {
+  render() {
     return (
       <input
-        onKeyUp={event => {
-          if (event.charCode === 38)
-            this.methodForPressingUp(event);
+        {...{
+          on: {
+            keyup: [
+              $event => {
+                if (!('button' in $event) && this._k($event.keyCode, 'up', 38)) return null
 
-          if (event.charCode === 40)
-            this.methodForPressingDown(event);
-        }} />
-    );
-  }
-}
-```
+                this.methodForPressingUp($event)
+              },
+              $event => {
+                if (!('button' in $event) && this._k($event.keyCode, 'down', 40)) return null
 
-#### API:
+                this.methodForPressingDown($event)
+              },
+              $event => {
+                if (
+                  ($event.ctrlKey && $event.altKey && $event.metaKey) ||
+                  !$event.shiftKey ||
+                  (!('button' in $event) && this._k($event.keyCode, 'enter', 13))
+                )
+                  return null
 
-| Modifier | Description |
-|---|---|
-| [`:stop`](#stop) | executes `event.stopPropagation()` |
-| [`:prevent`](#prevent) | executes `event.preventDefault()` |
-| [`:k{keyCode}`](#keycode) | checks for the `keyCode` |
-| [`:{keyAlias}`](#keyalias) | checks for the `keyCode` that is assigned to this `keyAlias`
+                this.methodOnlyOnShiftEnter($event)
+              },
+              $event => {
+                if (
+                  ($event.ctrlKey && $event.shiftKey && $event.metaKey) ||
+                  !$event.altKey ||
+                  (!('button' in $event) && this._k($event.keyCode, 'enter', 13))
+                )
+                  return null
 
-##### Stop
-
-`event.stopPropagation()` is called before the expression
-
-Example:
-```js
-export default {
-  render () {
-    return (
-      <div>
-        <a href="/" onClick:stop />
-        <a href="/" onClick:stop={this.method} />
-      </div>
+                this.methodOnlyOnAltEnter($event)
+              },
+            ],
+          },
+        }}
+      />
     )
-  }
+  },
 }
+
+
 ```
-is transpiled to:
+
+#### We try to keep API and behaviour as close to [Vue Event Modifiers](https://vuejs.org/v2/guide/events.html#Event-Modifiers) as we can. The only difference today is support for [bare](https://github.com/vuejs/vue/pull/5977) modifier and syntax.
+
+##### Example:
+
+Vue template:
+```html
+<input
+  @keyup.up="methodForPressingUp"
+  @keyup.down="methodForPressingDown"
+  @keyup.bare.shift.enter="methodOnlyOnShiftEnter"
+  @keyup.bare.alt.enter="methodOnlyOnAltEnter"
+  @keyup.120="onPressKey120('some', 'arguments')"
+>
+```
+JSX:
 ```js
-export default {
-  render () {
-    return (
-      <div>
-        <a href="/" onClick={event => {
-          event.stopPropagation();
-        }} />
-        <a href="/" onClick={event => {
-          event.stopPropagation();
-          this.method(event);
-        }} />
-      </div>
-    );
-  }
-}
+<input
+  onKeyup:up={this.methodForPressingUp}
+  onKeyup:down={this.methodForPressingDown}
+  onKeyup:bare-shift-enter={this.methodOnlyOnShiftEnter}
+  onKeyup:bare-alt-enter={this.methodOnlyOnAltEnter}
+  onKeyup:k120={() => this.onPressKey120('some', 'arguments')}
+/>
 ```
 
-##### Prevent
+##### Notable differences:
 
-`event.preventDefault()` is called before the expression
-
-Example:
-```js
-export default {
-  render () {
-    return (
-      <div>
-        <a href="/" onClick:prevent />
-        <a href="/" onClick:prevent={this.method} />
-      </div>
-    )
-  }
-}
-```
-is transpiled to:
-```js
-export default {
-  render () {
-    return (
-      <div>
-        <a href="/" onClick={event => {
-          event.preventDefault();
-        }} />
-        <a href="/" onClick={event => {
-          event.preventDefault();
-          this.method(event);
-        }} />
-      </div>
-    );
-  }
-}
-```
-
-##### KeyCode
-
-`event.charCode` is compared to the keyCode
-
-Example:
-```js
-export default {
-  render () {
-    return <input onKeyUp:k13={this.method} />
-  }
-}
-```
-is transpiled to:
-```js
-export default {
-  render () {
-    return (
-      <input onKeyUp={event => {
-        if (event.charCode === 13)
-          this.method(event);
-      }} />
-    );
-  }
-}
-```
-
-##### KeyAlias
-
-There is a predefined list of aliases for keycodes:
-```js
-const aliases = {
-  esc: 27,
-  tab: 9,
-  enter: 13,
-  space: 32,
-  up: 38,
-  left: 37,
-  right: 39,
-  down: 40,
-  'delete': [8, 46]
-}
-```
-
-Example:
-```js
-export default {
-  render () {
-    return <input onKeyUp:enter={this.method} />
-  }
-}
-```
-is transpiled to:
-```js
-export default {
-  render () {
-    return (
-      <input onKeyUp={event => {
-        if (event.charCode === 13)
-          this.method(event);
-      }} />
-    );
-  }
-}
-```
-
-#### You can combine them:
-
-Example:
-```js
-export default {
-  render () {
-    return <input
-      onKeyUp:enter={this.method}
-      onKeyUp:k60={this.otherMethod} />
-  }
-}
-```
-is transpiled to:
-```js
-export default {
-  render () {
-    return (
-      <input
-        onKeyUp={event => {
-          if (event.charCode === 13)
-            this.method(event);
-
-          if (event.charCode === 60)
-            this.otherMethod(event);
-        }} />
-    );
-  }
-}
-```
+ * Modifiers are prefixed by `:` and separated by `-` (in vue: prefixed by `.` and separated by `.`)
+ * Key codes are prefixed by `k`
+ * Call expression should be wrapped in arrow functions
