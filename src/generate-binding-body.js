@@ -1,7 +1,9 @@
 import { aliases, keyModifiers, keyCodeRE } from './constants'
 
 export default (t, { modifiers, expression }) => {
-  const callStatement = t.expressionStatement(t.callExpression(expression, [t.identifier('$event')]))
+  const callStatement = t.expressionStatement(
+    t.callExpression(expression, [t.identifier('$event'), t.spreadElement(t.identifier('attrs'))]),
+  )
   const result = []
   const conditions = []
   const keyConditions = [
