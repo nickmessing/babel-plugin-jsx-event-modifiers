@@ -69,7 +69,7 @@ var generateBindingBody = (function (t, _ref) {
   var modifiers = _ref.modifiers,
       expression = _ref.expression;
 
-  var callStatement = t.expressionStatement(t.callExpression(expression, [t.identifier('$event')]));
+  var callStatement = t.expressionStatement(t.callExpression(expression, [t.identifier('$event'), t.spreadElement(t.identifier('attrs'))]));
   var result = [];
   var conditions = [];
   var keyConditions = [t.unaryExpression('!', t.binaryExpression('in', t.stringLiteral('button'), t.identifier('$event')))];
@@ -119,7 +119,7 @@ var generateBindingBody = (function (t, _ref) {
 
 var generateBindingsList = (function (t, bindings) {
   return bindings.map(function (binding) {
-    return t.arrowFunctionExpression([t.identifier('$event')], t.blockStatement(generateBindingBody(t, binding)));
+    return t.arrowFunctionExpression([t.identifier('$event'), t.restElement(t.identifier('attrs'))], t.blockStatement(generateBindingBody(t, binding)));
   });
 });
 
