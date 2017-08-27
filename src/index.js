@@ -9,7 +9,8 @@ export default ({ types: t }) => ({
       path.traverse({
         JSXOpeningElement(path) {
           const attributes = path.get('attributes')
-          const events = Object.entries(attributes.reduce(groupEventAttributes(t), {}))
+          const groupedEventAttributes = attributes.reduce(groupEventAttributes(t), {})
+          const events = Object.keys(groupedEventAttributes).map(key => [key, groupedEventAttributes[key]])
           if (events.length > 0) {
             path.pushContainer(
               'attributes',

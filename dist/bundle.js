@@ -145,7 +145,10 @@ var index = (function (_ref) {
         path.traverse({
           JSXOpeningElement(path) {
             var attributes = path.get('attributes');
-            var events = Object.entries(attributes.reduce(groupEventAttributes(t), {}));
+            var groupedEventAttributes = attributes.reduce(groupEventAttributes(t), {});
+            var events = Object.keys(groupedEventAttributes).map(function (key) {
+              return [key, groupedEventAttributes[key]];
+            });
             if (events.length > 0) {
               path.pushContainer('attributes', t.jSXSpreadAttribute(t.objectExpression([t.objectProperty(t.identifier('on'), t.objectExpression(events.map(generateSpreadEvent(t))))])));
             }
