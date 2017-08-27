@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-event-modifiers",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "JSX Syntactic Sugar Plugin for Event Modifiers",
   "main": "dist/bundle.js",
   "repository": "https://github.com/nickmessing/babel-plugin-jsx-event-modifiers.git",
