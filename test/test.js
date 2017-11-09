@@ -35,3 +35,6 @@ snapshotTest(
 snapshotTest('Simple alias :enter', '<a onEvent:enter={this.action1} />')
 snapshotTest('Simple double alias :delete', '<a onEvent:delete={this.action1} />')
 snapshotTest('Simple key code :k120', '<a onEvent:k120={this.action1} />')
+
+// TSX support
+snapshotTest('- prefix -bare-alt-shift', '<a onEvent-bare-alt-shift={this.action1} />')
