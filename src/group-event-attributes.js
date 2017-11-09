@@ -4,11 +4,18 @@ export default t => (obj, attribute) => {
   }
 
   const isNamespaced = t.isJSXNamespacedName(attribute.get('name'))
-  const event = (isNamespaced ? attribute.get('name').get('namespace') : attribute.get('name')).get('name').node
-  const modifiers = isNamespaced ? new Set(attribute.get('name').get('name').get('name').node.split('-')) : new Set()
+  let event = (isNamespaced ? attribute.get('name').get('namespace') : attribute.get('name')).get('name').node
+  let modifiers = isNamespaced ? new Set(attribute.get('name').get('name').get('name').node.split('-')) : new Set()
 
   if (event.indexOf('on') !== 0) {
     return obj
+  }
+
+  // Support tsx (onClick-once)
+  const mods = event.split('-')
+  if (mods.length > 1) {
+    event = mods.splice(0, 1)[0]
+    modifiers = new Set(mods)
   }
 
   const value = attribute.get('value')
