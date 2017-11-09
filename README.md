@@ -114,6 +114,25 @@ JSX:
 />
 ```
 
+##### TSX Support
+
+TSX does not support `:` in prefix. With TSX you may use `-` as the prefix. 
+
+```js
+export default {
+  render () {
+    return (
+      <input
+        onKeyup-up={this.methodForPressingUp}
+        onKeyup-down={this.methodForPressingDown}
+        onKeyup-bare-shift-enter={this.methodOnlyOnShiftEnter}
+        onKeyup-bare-alt-enter={this.methodOnlyOnAltEnter}
+      />
+    )
+  }
+}
+```
+
 ##### Notable differences:
 
  * Modifiers are prefixed by `:` and separated by `-` (in vue: prefixed by `.` and separated by `.`)
