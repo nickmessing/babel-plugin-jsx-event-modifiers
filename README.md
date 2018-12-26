@@ -1,5 +1,7 @@
 ## Event Modifiers for JSX
 
+## DEPRECATED: Check https://github.com/vuejs/jsx instead
+
 This babel plugin adds some syntactic sugar to JSX.
 
 ### Usage:
